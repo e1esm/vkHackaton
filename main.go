@@ -16,7 +16,7 @@ func main() {
 	e := echo.New()
 	setUpDatabase()
 	setUpRoutes(e)
-	e.Logger.Fatal(e.Start(":8081"))
+	e.Logger.Fatal(e.Start("45.146.164.48:8081"))
 
 }
 
