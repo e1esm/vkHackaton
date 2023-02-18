@@ -1,0 +1,42 @@
+version: '3:7'
+
+services:
+  db:
+    image: "tickets_db"
+    container_name: "tickets_db"
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    networks:
+      - mynet
+    ports:
+      - "3308:3308"
+    environment:
+      MYSQL_ROOT_PASSWORD: "E9602922"
+      MYSQL_ROOT_USER: "elesm"
+      MYSQL_DATABASE: "nft_tickets_app"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+  api:
+    image: "tickets_api"
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    volumes:
+      - .:/app/
+    networks:
+      - mynet
+
+
+networks:
+  mynet:
+      driver: "bridge"
+volumes:
+  mysql_data:
