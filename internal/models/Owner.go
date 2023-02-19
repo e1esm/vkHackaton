@@ -1,6 +1,6 @@
 package models
 
-type Model struct {
-	link string `json:"link"`
-	name string `json:"name"`
+type Owner struct {
+	Link string `json:"link"`
+	Name string `json:"name"`
 }

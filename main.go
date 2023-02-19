@@ -13,33 +13,34 @@ import (
 
 func main() {
 
-	e := echo.New()
 	setUpDatabase()
+	e := echo.New()
 	setUpRoutes(e)
-	e.Logger.Fatal(e.Start("45.146.164.48:8081"))
+	e.Logger.Fatal(e.Start(":8081"))
 
 }
 
 func setUpDatabase() {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("Couldn't load env file: %s", err)
 	}
 
 	dbUsername := os.Getenv("db_username")
 	dbPassword := os.Getenv("db_password")
-	cfgString := dbUsername + ":" + dbPassword + "@tcp(docker.for.mac.localhost:3306)/nft_tickets_app"
-	//cfgString := dbUsername + ":" + dbPassword + "@/nft_tickets_app"
-	db, err := sql.Open("mysql", cfgString)
+	//cfgString := dbUsername + ":" + dbPassword + "@tcp(docker.for.mac.localhost:3306)/nft_tickets_app"
+	cfgString := dbUsername + ":" + dbPassword + "@/nft_tickets_app"
+	cfg.CFG.DB, err = sql.Open("mysql", cfgString)
 	if err != nil {
 		log.Fatal("Couldn't connect to the database")
 	}
-	cfg.CFG.DB = db
 }
 
 func setUpRoutes(e *echo.Echo) {
-	e.GET("/event/:title", controllers.GetEvent)
-	e.GET("/events", controllers.GetAllEvents)
-	e.POST("/save_event", controllers.SaveEvent)
+	e.GET("/getevent/:title", controllers.GetEvent)
+	e.GET("/getallevents", controllers.GetAllEvents)
+	e.POST("/createevent", controllers.SaveEvent)
 	e.PUT("/edit_event", controllers.EditEvent)
+	e.POST("/registerallet", controllers.RegisterWaller)
+	e.GET("/getwallet", controllers.GetWallet)
 }
